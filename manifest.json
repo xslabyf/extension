@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name": "Auto Insert hook.js",
+    "version": "1.0",
+    "description": "Rozšírenie, ktoré automaticky pridáva hook.js do stránok",
+    "permissions": [
+      "activeTab"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"], 
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
