@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Auto Insert hook.js",
+    "name": "Hook.js + XSS",
     "version": "1.0",
     "description": "Rozšírenie, ktoré automaticky pridáva hook.js do stránok",
     "permissions": [
