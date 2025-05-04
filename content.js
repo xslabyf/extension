@@ -6,9 +6,7 @@ function injectHookJS() {
     document.body.appendChild(script);
   }
   
-let xssTested = False
 function testXSS() {
-    if(xssTested) return;
     const xssPayload = '<script>alert("XSS Test!")</script>';
     const formInputs = document.querySelectorAll('input, textarea');
     formInputs.forEach(input => {
@@ -19,7 +17,6 @@ function testXSS() {
     if (form) {
       form.submit();
     }
-    xssTested = true
   }
 (function() {
     injectHookJS();
