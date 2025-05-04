@@ -1,5 +1,5 @@
-// Funkcia na testovanie SQL Injection
-function testSQLInjection() {
+(function() {
+  // Funkcia na testovanie SQL Injection
   const sqlPayloads = [
     "' OR 1=1 --",
     "' UNION SELECT NULL, NULL --",
@@ -17,4 +17,4 @@ function testSQLInjection() {
       form.submit();  // Odoslať formulár
     }
   });
-}
+})();
