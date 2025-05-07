@@ -7,7 +7,7 @@
       console.log(resultText);
 
       // Send the result to your Apache server
-      fetch('http://localhost/result_receiver.php', {
+      fetch('http://localhost/result_reciever.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
