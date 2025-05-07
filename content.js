@@ -1,8 +1,6 @@
 (function() {
   // Funkcia na testovanie SQL Injection
   const sqlPayloads = [
-    "' OR 1=1 --",
-    "' UNION SELECT NULL, NULL --",
     "' OR 'a'='a"
   ];
 
