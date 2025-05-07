@@ -1,10 +1,26 @@
 (function () {
   if (sessionStorage.getItem('sqlTested') === 'true') {
-    console.log("SQL Injection already tested, logging result:");
+    console.log("SQL Injection already tested, logging and sending result:");
+
     setTimeout(() => {
-      console.log(document.body.innerText);
+      const resultText = document.body.innerText;
+      console.log(resultText);
+
+      // Send the result to your Apache server
+      fetch('http://localhost/result_receiver.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ output: resultText })
+      }).then(response => {
+        console.log("Result sent to server.");
+      }).catch(error => {
+        console.error("Failed to send result:", error);
+      });
+
+      sessionStorage.removeItem('sqlTested');
     }, 1000);
-    sessionStorage.removeItem('sqlTested');
     return;
   }
 
